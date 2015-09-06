@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+
+  RewriteRule ^ - [E=protossl]
+  RewriteCond %{HTTPS} on
+  RewriteRule ^ - [E=protossl:s]
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ http%{ENV:protossl}://%1%{REQUEST_URI} [L,R=301]
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(jpg|jpeg|png|gif|swf|js|css|ico|woff)$">
+    Header set Cache-Control "max-age=604800"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault A86400
+  ExpiresByType text/html A86400
+</IfModule>
